@@ -1,35 +1,45 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { MongoClient } from "mongodb";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// /lib/dbConnect.js
+import mongoose from "mongoose";
 
-import MongoDBInterface from "./mongo";
+/** 
+Source : 
+https://github.com/vercel/next.js/blob/canary/examples/with-mongodb-mongoose/utils/dbConnect.js 
+**/
 
-const MONGODB_URI = process.env.mongo_db_url;
-const MONGODB_DB = process.env.DB_NAME;
+const MONGO_URL = process.env.MONGO_URL;
 
-let cachedClient = null;
-let cachedDb = null;
+if (!MONGO_URL) {
+  throw new Error(
+    "Please define the MONGO_URL environment variable inside .env.local",
+  );
+}
+console.log(MONGO_URL);
 
-export default async function connectToDatabase(): Promise<MongoDBInterface> {
-  // check the cached.
-  if (cachedClient && cachedDb) {
-    // load from cache
-    return {
-      client: cachedClient,
-      db: cachedDb,
-    };
+/**
+ * Global is used here to maintain a cached connection across hot reloads
+ * in development. This prevents connections growing exponentially
+ * during API Route usage.
+ */
+const globalAny: any = global;
+let cached = globalAny.mongoose;
+
+if (!cached) {
+  cached = globalAny.mongoose = { conn: null, promise: null };
+}
+
+async function dbConnect(): Promise<typeof mongoose> {
+  if (cached.conn) {
+    return cached.conn;
   }
 
-  // Connect to cluster
-  const client = new MongoClient(MONGODB_URI);
-  await client.connect();
-  const db = client.db("commerce");
-
-  // set cache
-  cachedClient = client;
-  cachedDb = db;
-
-  return {
-    client: cachedClient,
-    db: cachedDb,
-  };
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGO_URL).then(mongoose => {
+      return mongoose;
+    });
+  }
+  cached.conn = await cached.promise;
+  return cached.conn;
 }
+
+export default dbConnect;
