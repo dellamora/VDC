@@ -1,7 +1,4 @@
 module.exports = {
-  env: {
-    mongo_db_url: "",
-  },
   images: {
     domains: [],
   },
