@@ -11,7 +11,7 @@ export const Container = styled.div`
 `;
 
 export const Icon = styled(IconSVG)`
-  height: 48px;
+  height: 30px;
   margin: 20px;
 `;
 
@@ -21,6 +21,10 @@ export const LinksNav = styled.div`
   align-items: center;
   color: white;
   word-break: keep-all;
+  p{
+    
+  }
+
 `;
 
 export const LineGray = styled.div`

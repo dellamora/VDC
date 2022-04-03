@@ -19,11 +19,11 @@ const Navbar: React.FC = (): JSX.Element => {
   return (
     <Container>
       <Icon alt="Valorant Logo" />
-      {/* <LineGray /> */}
+      <LineGray />
       <LinksNav>
         {routes.map(route => (
           <Link href={route.href} key={route.href}>
-            {route.label}
+           <p> {route.label}</p>
           </Link>
         ))}
       </LinksNav>

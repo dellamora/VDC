@@ -10,7 +10,7 @@ export const Section = styled.div`
   /* display: flex; */
   height: 100vh;
   width: 100vw;
-  background: url("/assets/bg.png");
+  background: url("/assets/bgvavas.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position-x: right;
